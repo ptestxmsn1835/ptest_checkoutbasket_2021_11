@@ -22,6 +22,11 @@ namespace CheckoutBasketLibrary
             {
                 if (ValidateBasket(basket))
                 {
+                    foreach (var item in basket.items)
+                    {
+                        response.totalPrice += skuPrices[item.SKU];
+                    }
+
                     response.isSuccessful = true;
                 }
             }
