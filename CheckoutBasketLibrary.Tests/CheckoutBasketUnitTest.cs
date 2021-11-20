@@ -85,5 +85,31 @@ namespace CheckoutBasketLibrary.Tests
             Assert.True(response.isSuccessful);
             Assert.AreEqual(15, response.totalPrice);
         }
+
+        [Test]
+        public void CalculateBasketTotal_Promotion_3xA_for_130()
+        {
+            var itemPriceData = new SKUPriceData();
+            var checkout = new Checkout(itemPriceData);
+            var basket = new Basket();
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 3);
+
+            var response = checkout.CalculateBasketTotal(basket);
+            Assert.True(response.isSuccessful);
+            Assert.AreEqual(130, response.totalPrice);
+        }
+
+        [Test]
+        public void CalculateBasketTotal_Promotion_3xA_for_130_WithRemainingAs()
+        {
+            var itemPriceData = new SKUPriceData();
+            var checkout = new Checkout(itemPriceData);
+            var basket = new Basket();
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 5);
+
+            var response = checkout.CalculateBasketTotal(basket);
+            Assert.True(response.isSuccessful);
+            Assert.AreEqual(230, response.totalPrice);
+        }
     }
 }
