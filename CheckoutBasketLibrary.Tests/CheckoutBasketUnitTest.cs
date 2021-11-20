@@ -128,6 +128,7 @@ namespace CheckoutBasketLibrary.Tests
             var itemPriceData = new SKUPriceData();
             var promotions = new List<IPromotion>()
             {
+                new Promotion_TwoB_For_45()
             };
             var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
@@ -143,7 +144,8 @@ namespace CheckoutBasketLibrary.Tests
         {
             var itemPriceData = new SKUPriceData();
             var promotions = new List<IPromotion>()
-            {
+            { 
+                new Promotion_TwoB_For_45()
             };
             var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
