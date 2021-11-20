@@ -121,7 +121,6 @@ namespace CheckoutBasketLibrary.Tests
             Assert.AreEqual(230, response.totalPrice);
         }
 
-
         [Test]
         public void CalculateBasketTotal_Promotion_2xB_for_45()
         {
@@ -154,6 +153,49 @@ namespace CheckoutBasketLibrary.Tests
             var response = checkout.CalculateBasketTotal(basket);
             Assert.True(response.isSuccessful);
             Assert.AreEqual(75, response.totalPrice);
+        }
+
+        [Test]
+        public void CalculateBasketTotal_Promotion_1xC1xD_for_30()
+        {
+            var itemPriceData = new SKUPriceData();
+            var promotions = new List<IPromotion>()
+            {
+                new Promotion_TwoB_For_45()
+            };
+            var checkout = new Checkout(itemPriceData, promotions);
+            var basket = new Basket();
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 1);
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
+
+            var response = checkout.CalculateBasketTotal(basket);
+            Assert.True(response.isSuccessful);
+            Assert.AreEqual(30, response.totalPrice);
+        }
+
+        [Test]
+        public void CalculateBasketTotal_Promotion_1xC1xD_for_30_WithRemainingCsAndDs()
+        {
+            var itemPriceData = new SKUPriceData();
+            var promotions = new List<IPromotion>()
+            {
+            };
+            var checkout = new Checkout(itemPriceData, promotions);
+            var basket = new Basket();
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 2);
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
+
+            var response = checkout.CalculateBasketTotal(basket);
+            Assert.True(response.isSuccessful);
+            Assert.AreEqual(50, response.totalPrice);
+
+            basket = new Basket();
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 1);
+            basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 2);
+
+            response = checkout.CalculateBasketTotal(basket);
+            Assert.True(response.isSuccessful);
+            Assert.AreEqual(45, response.totalPrice);
         }
     }
 }
