@@ -2,6 +2,7 @@
 using CheckoutBasketLibrary;
 using System;
 using System.Collections.Generic;
+using CheckoutBasketLibrary.Promotion;
 
 namespace CheckoutBasketLibrary.Tests
 {
@@ -90,7 +91,11 @@ namespace CheckoutBasketLibrary.Tests
         public void CalculateBasketTotal_Promotion_3xA_for_130()
         {
             var itemPriceData = new SKUPriceData();
-            var checkout = new Checkout(itemPriceData);
+            var promotions = new List<IPromotion>()
+            {
+                new Promotion_ThreeA_For_130()
+            };
+            var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 3);
 
@@ -103,7 +108,11 @@ namespace CheckoutBasketLibrary.Tests
         public void CalculateBasketTotal_Promotion_3xA_for_130_WithRemainingAs()
         {
             var itemPriceData = new SKUPriceData();
-            var checkout = new Checkout(itemPriceData);
+            var promotions = new List<IPromotion>()
+            {
+                new Promotion_ThreeA_For_130()
+            };
+            var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 5);
 
