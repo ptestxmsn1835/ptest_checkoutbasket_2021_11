@@ -24,21 +24,18 @@ namespace CheckoutBasketLibrary
             {
                 //Validate Basket to ensure bad input is stopped here
                 ValidateBasket(basket);
-                List<BasketItem> remainingBasketItems = basket.items;
+                Dictionary<char, List<BasketItem>> groupedItemsBySKU = basket.items.GroupBy(i => i.SKU).ToDictionary(i => i.Key, i => i.ToList());
 
                 //Fall-Through Pattern - Each promotion removes items that met promotion while allowing remaining items to be considered for future promotions
                 foreach (IPromotion promotion in promotions)
                 {
-                    PromotionResult promotionResponse = promotion.ApplyPromotion(remainingBasketItems);
+                    PromotionResult promotionResponse = promotion.ApplyPromotion(groupedItemsBySKU);
                     response.totalPrice += promotionResponse.promotionTotalPrice;
-                    remainingBasketItems = promotionResponse.nonPromotionItems;
+                    groupedItemsBySKU = promotionResponse.nonPromotionItems;
                 }
 
                 //Remaining items that met no promotion criteria are calculated here
-                foreach (BasketItem item in remainingBasketItems)
-                {
-                    response.totalPrice += skuPrices[item.SKU];
-                }
+                response.totalPrice += groupedItemsBySKU.Select(g => g.Value.Select(item => skuPrices[item.SKU]).Sum()).Sum();
 
                 response.isSuccessful = true;
             }

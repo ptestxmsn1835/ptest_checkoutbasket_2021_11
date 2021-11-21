@@ -10,7 +10,7 @@ namespace CheckoutBasketLibrary.Promotion
         private readonly int promotionPrice = 45;
         private readonly bool allowMultiplePromotionMatches = true;
 
-        public PromotionResult ApplyPromotion(List<BasketItem> items)
+        public PromotionResult ApplyPromotion(Dictionary<char, List<BasketItem>> items)
         {
             return PromotionType_XofSingleSKU.ApplyPromotionType(items, promotionSKU, promotionQuantityRequired, promotionPrice, allowMultiplePromotionMatches);
         }

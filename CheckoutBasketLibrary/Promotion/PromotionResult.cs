@@ -6,6 +6,6 @@ namespace CheckoutBasketLibrary.Promotion
     {
         public int promotionTotalPrice = 0;
         public List<BasketItem> promotionItems = new();
-        public List<BasketItem> nonPromotionItems = new();
+        public Dictionary<char, List<BasketItem>> nonPromotionItems = new();
     }
 }

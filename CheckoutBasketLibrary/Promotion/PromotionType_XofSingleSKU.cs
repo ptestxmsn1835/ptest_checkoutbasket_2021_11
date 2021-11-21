@@ -1,37 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CheckoutBasketLibrary.Promotion
 {
     public static class PromotionType_XofSingleSKU
     {
-        public static PromotionResult ApplyPromotionType(List<BasketItem> items, char promotionSKU, int promotionQuantityRequired, int promotionPrice, bool allowMultiplePromotionMatches)
+        public static PromotionResult ApplyPromotionType(Dictionary<char, List<BasketItem>> items, char promotionSKU, int promotionQuantityRequired, int promotionPrice, bool allowMultiplePromotionMatches)
         {
-            PromotionResult result = new();
-            List<BasketItem> promotionMatchingItems = new();
-
-            foreach (BasketItem item in items)
+            PromotionResult result = new()
             {
-                //IF item matches required SKU for promotion then check promotion, ELSE move it to nonPromotionItems for later processing
-                if (item.SKU == promotionSKU && (allowMultiplePromotionMatches || result.promotionItems.Count == 0))
-                {
-                    promotionMatchingItems.Add(item);
+                nonPromotionItems = items
+            };
 
-                    //IF promotion quantity met, update price and clear list for future items
-                    if (promotionMatchingItems.Count == promotionQuantityRequired)
-                    {
-                        result.promotionItems.AddRange(promotionMatchingItems);
-                        result.promotionTotalPrice += promotionPrice;
-                        promotionMatchingItems.Clear();
-                    }
-                }
-                else
+            //IF required SKU can't be found in basket, return as promotion can't be applied
+            if (items.ContainsKey(promotionSKU) && items[promotionSKU].Count >= promotionQuantityRequired)
+            {
+                List<BasketItem> promotionItems = items[promotionSKU];
+
+                int promotionMatchCount = Convert.ToInt32(Math.Floor((decimal)promotionItems.Count / promotionQuantityRequired));
+                if (promotionMatchCount > 1 && !allowMultiplePromotionMatches)
                 {
-                    result.nonPromotionItems.Add(item);
+                    promotionMatchCount = 1;
                 }
+
+                //For each SKU remove the promotion items from the remaining items to process
+                int promotionItemCount = promotionMatchCount * promotionQuantityRequired;
+                result.promotionItems.AddRange(promotionItems.Take(promotionItemCount));
+                items[promotionSKU] = promotionItems.Skip(promotionItemCount).ToList();
+
+                //Calculate total promotion price
+                result.promotionTotalPrice += promotionMatchCount * promotionPrice;
             }
 
-            //Move leftover SKU items into nonPromotionItems for later processing
-            result.nonPromotionItems.AddRange(promotionMatchingItems);
             return result;
         }
     }

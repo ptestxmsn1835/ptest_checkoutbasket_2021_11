@@ -4,6 +4,6 @@ namespace CheckoutBasketLibrary.Promotion
 {
     public interface IPromotion
     {
-        PromotionResult ApplyPromotion(List<BasketItem> items);
+        PromotionResult ApplyPromotion(Dictionary<char, List<BasketItem>> items);
     }
 }
