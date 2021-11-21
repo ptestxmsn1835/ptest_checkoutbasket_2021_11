@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CheckoutBasketLibrary.Promotion
 {
@@ -10,10 +6,10 @@ namespace CheckoutBasketLibrary.Promotion
     {
         public static PromotionResult ApplyPromotionType(List<BasketItem> items, char promotionSKU, int promotionQuantityRequired, int promotionPrice, bool allowMultiplePromotionMatches)
         {
-            var result = new PromotionResult();
-            var promotionMatchingItems = new List<BasketItem>();
+            PromotionResult result = new();
+            List<BasketItem> promotionMatchingItems = new();
 
-            foreach (var item in items)
+            foreach (BasketItem item in items)
             {
                 if (item.SKU == promotionSKU && (allowMultiplePromotionMatches || result.promotionItems.Count == 0))
                 {

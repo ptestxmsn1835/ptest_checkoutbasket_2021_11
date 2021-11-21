@@ -1,20 +1,18 @@
-﻿using NUnit.Framework;
-using CheckoutBasketLibrary;
-using System;
+﻿using CheckoutBasketLibrary.Promotion;
+using NUnit.Framework;
 using System.Collections.Generic;
-using CheckoutBasketLibrary.Promotion;
 
 namespace CheckoutBasketLibrary.Tests
 {
-    class Promotion_1xC1xDfor30UnitTest
+    internal class Promotion_1xC1xDfor30UnitTest
     {
         private Checkout checkout;
 
         [SetUp]
         public void Setup()
         {
-            var itemPriceData = new SKUPriceData();
-            var promotions = new List<IPromotion>()
+            SKUPriceData itemPriceData = new();
+            List<IPromotion> promotions = new()
             {
                 new Promotion_OneCOneD_For_30()
             };
@@ -24,11 +22,11 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_1xC1xD_for_30()
         {
-            var basket = new Basket();
+            Basket basket = new();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
 
-            var response = checkout.CalculateBasketTotal(basket);
+            CheckoutResponse response = checkout.CalculateBasketTotal(basket);
             Assert.True(response.isSuccessful);
             Assert.AreEqual(30, response.totalPrice);
         }
@@ -36,11 +34,11 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_1xC1xD_for_30_WithRemainingCsAndDs()
         {
-            var basket = new Basket();
+            Basket basket = new();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 2);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
 
-            var response = checkout.CalculateBasketTotal(basket);
+            CheckoutResponse response = checkout.CalculateBasketTotal(basket);
             Assert.True(response.isSuccessful);
             Assert.AreEqual(50, response.totalPrice);
 
@@ -56,13 +54,13 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_1xC1xD_for_30_WithAB()
         {
-            var basket = new Basket();
+            Basket basket = new();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'B', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
 
-            var response = checkout.CalculateBasketTotal(basket);
+            CheckoutResponse response = checkout.CalculateBasketTotal(basket);
             Assert.True(response.isSuccessful);
             Assert.AreEqual(110, response.totalPrice);
         }

@@ -2,15 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckoutBasketLibrary
 {
     public class Checkout
     {
-        private readonly Dictionary<char, int> skuPrices = new Dictionary<char, int>();
-        private readonly List<IPromotion> promotions = new List<IPromotion>();
+        private readonly Dictionary<char, int> skuPrices = new();
+        private readonly List<IPromotion> promotions = new();
 
         public Checkout(ISKUPriceData skuPriceData, List<IPromotion> promotions = null)
         {
@@ -20,20 +18,20 @@ namespace CheckoutBasketLibrary
 
         public CheckoutResponse CalculateBasketTotal(Basket basket)
         {
-            var response = new CheckoutResponse();
+            CheckoutResponse response = new();
             try
             {
                 ValidateBasket(basket);
-                var remainingBasketItems = basket.items;
+                List<BasketItem> remainingBasketItems = basket.items;
 
-                foreach (var promotion in promotions)
+                foreach (IPromotion promotion in promotions)
                 {
-                    var promotionResponse = promotion.ApplyPromotion(remainingBasketItems);
+                    PromotionResult promotionResponse = promotion.ApplyPromotion(remainingBasketItems);
                     response.totalPrice += promotionResponse.promotionTotalPrice;
                     remainingBasketItems = promotionResponse.nonPromotionItems;
                 }
 
-                foreach (var item in remainingBasketItems)
+                foreach (BasketItem item in remainingBasketItems)
                 {
                     response.totalPrice += skuPrices[item.SKU];
                 }
@@ -50,7 +48,7 @@ namespace CheckoutBasketLibrary
 
         private bool ValidateBasket(Basket basket)
         {
-            var distinctInvalidSKUs = basket.items.Select(i => i.SKU).Where(sku => !skuPrices.ContainsKey(sku)).Distinct().OrderBy(sku => sku).ToList();
+            List<char> distinctInvalidSKUs = basket.items.Select(i => i.SKU).Where(sku => !skuPrices.ContainsKey(sku)).Distinct().OrderBy(sku => sku).ToList();
 
             if (distinctInvalidSKUs.Count > 0)
             {

@@ -5,10 +5,10 @@ namespace CheckoutBasketLibrary.Promotion
     public class Promotion_TwoB_For_45 : IPromotion
     {
         //2 x B items for 45
-        char promotionSKU = 'B';
-        readonly int promotionQuantityRequired = 2;
-        readonly int promotionPrice = 45;
-        bool allowMultiplePromotionMatches = true;
+        private readonly char promotionSKU = 'B';
+        private readonly int promotionQuantityRequired = 2;
+        private readonly int promotionPrice = 45;
+        private readonly bool allowMultiplePromotionMatches = true;
 
         public PromotionResult ApplyPromotion(List<BasketItem> items)
         {
