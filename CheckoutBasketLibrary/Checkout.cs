@@ -10,6 +10,7 @@ namespace CheckoutBasketLibrary
         private readonly Dictionary<char, int> skuPrices = new();
         private readonly List<IPromotion> promotions = new();
 
+        //Dependency Inversion allows different pricing models and promotion lists to be used
         public Checkout(ISKUPriceData skuPriceData, List<IPromotion> promotions = null)
         {
             skuPrices = skuPriceData.GetPriceData();
@@ -21,9 +22,11 @@ namespace CheckoutBasketLibrary
             CheckoutResponse response = new();
             try
             {
+                //Validate Basket to ensure bad input is stopped here
                 ValidateBasket(basket);
                 List<BasketItem> remainingBasketItems = basket.items;
 
+                //Fall-Through Pattern - Each promotion removes items that met promotion while allowing remaining items to be considered for future promotions
                 foreach (IPromotion promotion in promotions)
                 {
                     PromotionResult promotionResponse = promotion.ApplyPromotion(remainingBasketItems);
@@ -31,6 +34,7 @@ namespace CheckoutBasketLibrary
                     remainingBasketItems = promotionResponse.nonPromotionItems;
                 }
 
+                //Remaining items that met no promotion criteria are calculated here
                 foreach (BasketItem item in remainingBasketItems)
                 {
                     response.totalPrice += skuPrices[item.SKU];
@@ -46,7 +50,7 @@ namespace CheckoutBasketLibrary
             return response;
         }
 
-        private bool ValidateBasket(Basket basket)
+        private void ValidateBasket(Basket basket)
         {
             List<char> distinctInvalidSKUs = basket.items.Select(i => i.SKU).Where(sku => !skuPrices.ContainsKey(sku)).Distinct().OrderBy(sku => sku).ToList();
 
@@ -54,8 +58,6 @@ namespace CheckoutBasketLibrary
             {
                 throw new KeyNotFoundException($"Checkout Exception - Invalid SKU(s) - {string.Join(", ", distinctInvalidSKUs)}");
             }
-
-            return true;
         }
     }
 
