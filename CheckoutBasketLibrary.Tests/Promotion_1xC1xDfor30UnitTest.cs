@@ -8,15 +8,22 @@ namespace CheckoutBasketLibrary.Tests
 {
     class Promotion_1xC1xDfor30UnitTest
     {
-        [Test]
-        public void CalculateBasketTotal_Promotion_1xC1xD_for_30()
+        private Checkout checkout;
+
+        [SetUp]
+        public void Setup()
         {
             var itemPriceData = new SKUPriceData();
             var promotions = new List<IPromotion>()
             {
                 new Promotion_OneCOneD_For_30()
             };
-            var checkout = new Checkout(itemPriceData, promotions);
+            checkout = new Checkout(itemPriceData, promotions);
+        }
+
+        [Test]
+        public void CalculateBasketTotal_Promotion_1xC1xD_for_30()
+        {
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
@@ -29,12 +36,6 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_1xC1xD_for_30_WithRemainingCsAndDs()
         {
-            var itemPriceData = new SKUPriceData();
-            var promotions = new List<IPromotion>()
-            {
-                new Promotion_OneCOneD_For_30()
-            };
-            var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'C', 2);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'D', 1);
@@ -55,12 +56,6 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_1xC1xD_for_30_WithAB()
         {
-            var itemPriceData = new SKUPriceData();
-            var promotions = new List<IPromotion>()
-            {
-                new Promotion_OneCOneD_For_30()
-            };
-            var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'B', 1);

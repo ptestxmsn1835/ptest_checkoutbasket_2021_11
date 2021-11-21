@@ -8,15 +8,22 @@ namespace CheckoutBasketLibrary.Tests
 {
     class Promotion_2xBfor45UnitTest
     {
-        [Test]
-        public void CalculateBasketTotal_Promotion_2xB_for_45()
+        private Checkout checkout;
+
+        [SetUp]
+        public void Setup()
         {
             var itemPriceData = new SKUPriceData();
             var promotions = new List<IPromotion>()
             {
                 new Promotion_TwoB_For_45()
             };
-            var checkout = new Checkout(itemPriceData, promotions);
+            checkout = new Checkout(itemPriceData, promotions);
+        }
+
+        [Test]
+        public void CalculateBasketTotal_Promotion_2xB_for_45()
+        {
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'B', 2);
 
@@ -28,12 +35,6 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_2xB_for_45_WithRemainingBs()
         {
-            var itemPriceData = new SKUPriceData();
-            var promotions = new List<IPromotion>()
-            { 
-                new Promotion_TwoB_For_45()
-            };
-            var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'B', 3);
 
@@ -45,12 +46,6 @@ namespace CheckoutBasketLibrary.Tests
         [Test]
         public void CalculateBasketTotal_Promotion_2xB_for_45_WithACD()
         {
-            var itemPriceData = new SKUPriceData();
-            var promotions = new List<IPromotion>()
-            {
-                new Promotion_TwoB_For_45()
-            };
-            var checkout = new Checkout(itemPriceData, promotions);
             var basket = new Basket();
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'A', 1);
             basket = BasketTestHelper.TestCreateBasketItems(basket, 'B', 2);
